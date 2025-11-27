@@ -1,0 +1,63 @@
+# Linear Regression: Salary vs Experience (Kaggle Dataset)
+# --------------------------------------------------------
+# This program reads the Salary_Data.csv file from Kaggle,
+# trains a simple linear regression model, and predicts salary based on experience.
+
+# Step 1: Import required libraries
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 2: Load the dataset
+# Make sure the Salary_Data.csv file is in the same folder as this script
+# You can download it from: https://www.kaggle.com/datasets/krishnajaiswal27/salary-data-simple-linear-regression
+data = pd.read_csv('salary_data.csv')
+
+# Step 3: Explore the dataset
+print("First 5 rows of the dataset:")
+print(data.head())
+print("\nDataset Info:")
+print(data.info())
+
+# Step 4: Separate features (X) and target (y)
+X = data[['YearsExperience']]  # Independent variable
+y = data['Salary']             # Dependent variable
+
+# Step 5: Split data into training and testing sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 6: Create and train the model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Step 7: Predict salaries for the test set
+y_pred = model.predict(X_test)
+
+# Step 8: Compare actual vs predicted values
+comparison = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+print("\nActual vs Predicted Salary:")
+print(comparison)
+
+# Step 9: Visualize training results
+plt.scatter(X_train, y_train, color='blue', label='Training Data')
+plt.plot(X_train, model.predict(X_train), color='red', label='Regression Line')
+plt.title('Salary vs Experience (Training Set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
+
+# Step 10: Visualize testing results
+plt.scatter(X_test, y_test, color='green', label='Test Data')
+plt.plot(X_train, model.predict(X_train), color='red', label='Regression Line')
+plt.title('Salary vs Experience (Test Set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.legend()
+plt.show()
+
+# Step 11: Predict for a custom experience value
+exp = float(input("\nEnter years of experience to predict salary: "))
+predicted_salary = model.predict([[exp]])
+print(f"Predicted Salary for {exp} years of experience: ₹{predicted_salary[0]:.2f}")
